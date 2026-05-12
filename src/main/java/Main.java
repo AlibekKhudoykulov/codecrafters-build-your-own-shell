@@ -13,6 +13,7 @@ public class Main {
             }
 
             System.out.println(command + ": command not found");
+            System.out.println("hello");
         }
 
     }
