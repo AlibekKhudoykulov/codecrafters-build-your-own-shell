@@ -4,12 +4,15 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
+    private static String[] builtIns = {"echo", "exit", "type"};
+    private static String[] paths = System.getenv("PATH").split(File.pathSeparator);
+
+
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
             System.out.print("$ ");
-            String[] paths = System.getenv("PATH").split(File.pathSeparator);
             String input = sc.nextLine();
 
             if (input.startsWith("echo")) {
@@ -17,29 +20,29 @@ public class Main {
             } else if (input.startsWith("exit")) {
                 System.exit(0);
             } else if (input.startsWith("type")) {
-                String command = input.substring(5);
-                if (command.equals("echo") || command.equals("exit") || command.equals("type")) {
-                    System.out.println(command + " is a shell builtin");
-                } else {
-                    boolean found = false;
-                    for(String directory: paths) {
-                        File file = new File(directory, command);
-                        if( file.exists() && file.canExecute()) {
-                            System.out.println(command + " is " + file.getAbsolutePath());
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        System.out.println(command + ": not found");
-                    }
-                }
-            }else {
+                getType(input.substring(5));
+            } else {
                 System.out.println(input + ": command not found");
             }
+        }
+    }
 
-
+    public static void getType(String input) {
+        for (String builtIn : builtIns) {
+            if (builtIn.equalsIgnoreCase(input)) {
+                System.out.println(builtIn + " is a shell builtin");
+                return;
+            }
         }
 
+        for(String path: paths){
+            File file = new File(path, input);
+            if (file.exists() && file.canExecute()) {
+                System.out.println(input + " is " + file.getAbsolutePath());
+                return;
+            }
+        }
+
+        System.out.println(input + ": not found");
     }
 }
