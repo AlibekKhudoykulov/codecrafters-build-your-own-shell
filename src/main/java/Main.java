@@ -12,7 +12,14 @@ public class Main {
                 System.out.println(input.substring(5));
             } else if (input.startsWith("exit")) {
                 System.exit(0);
-            } else {
+            }if (input.startsWith("type")) {
+                String command = input.substring(5);
+                if (command.equals("echo") || command.equals("exit") || command.equals("type")) {
+                    System.out.println(command + " is a built-in command");
+                } else {
+                    System.out.println(command + " is not a built-in command");
+                }
+            }else {
                 System.out.println(input + ": command not found");
             }
 
