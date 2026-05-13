@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
@@ -55,6 +54,13 @@ public class Main {
             if (file.exists() && file.canExecute()) {
                 ProcessBuilder pb = new ProcessBuilder(commands);
                 Process process = pb.start();
+                process.waitFor();
+                InputStream is = process.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
 //                System.out.println("Program was passed "+ commands.length +" args (including program name).");
 //                System.out.println("Arg #0 (program name): "+ commands[0]);
 //                printCommands(commands);
