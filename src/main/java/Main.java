@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
@@ -17,6 +18,8 @@ public class Main {
                 System.out.println(input.substring(5));
             } else if (input.startsWith("type")) {
                 getType(input.substring(5));
+            }else if(input.startsWith("pwd")) {
+                getPrintWorkingDirectory();
             } else if (input.startsWith("exit")) {
                 System.exit(0);
             } else {
@@ -73,5 +76,9 @@ public class Main {
         while ((line = reader.readLine()) != null) {
             System.out.println(line);
         }
+    }
+
+    public static void getPrintWorkingDirectory(){
+        System.out.println(Path.of("").toAbsolutePath());
     }
 }
