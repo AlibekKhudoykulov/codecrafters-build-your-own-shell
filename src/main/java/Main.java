@@ -1,6 +1,5 @@
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -17,11 +16,12 @@ public class Main {
 
             if (input.startsWith("echo")) {
                 System.out.println(input.substring(5));
-            } else if (input.startsWith("exit")) {
-                System.exit(0);
             } else if (input.startsWith("type")) {
                 getType(input.substring(5));
+            } else if (input.startsWith("exit")) {
+                System.exit(0);
             } else {
+                getExecutableProgram(input);
                 System.out.println(input + ": command not found");
             }
         }
@@ -44,5 +44,18 @@ public class Main {
         }
 
         System.out.println(input + ": not found");
+    }
+
+    public static void getExecutableProgram(String input) throws IOException, InterruptedException {
+        String[] command = input.split(" ");
+        for(String path: paths){
+            File file = new File(path, command[0]);
+            if (file.exists() && file.canExecute()) {
+                ProcessBuilder pb = new ProcessBuilder(command);
+                Process process = pb.start();
+                int exitCode = process.waitFor();
+                System.out.println("Exited with code: " + exitCode);
+            }
+        }
     }
 }
