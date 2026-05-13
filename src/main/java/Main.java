@@ -58,6 +58,7 @@ public class Main {
                 System.out.println("Program was passed "+ commands.length +" args (including program name).");
                 System.out.println("Arg #0 (program name): "+ commands[0]);
                 printCommands(commands);
+                System.out.println("Program Signature: " + process.pid());
                 return true;
             }
         }
