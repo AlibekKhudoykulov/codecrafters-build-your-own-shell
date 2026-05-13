@@ -49,16 +49,24 @@ public class Main {
     }
 
     public static boolean getExecutableProgram(String input) throws IOException, InterruptedException {
-        String[] command = input.split(" ");
+        String[] commands = input.split(" ");
         for(String path: paths){
-            File file = new File(path, command[0]);
+            File file = new File(path, commands[0]);
             if (file.exists() && file.canExecute()) {
-                ProcessBuilder pb = new ProcessBuilder(command);
+                ProcessBuilder pb = new ProcessBuilder(commands);
                 Process process = pb.start();
-                System.out.println("Program was passed "+ command.length +" args (including program name).");
+                System.out.println("Program was passed "+ commands.length +" args (including program name).");
+                System.out.println("Arg #0 (program name): "+ commands[0]);
+                printCommands(commands);
                 return true;
             }
         }
         return false;
+    }
+
+    public static void printCommands(String[] commands){
+        for(int i = 1; i < commands.length - 1; i++){
+            System.out.println("Arg #"+i+": "+commands[i]);
+        }
     }
 }
