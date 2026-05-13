@@ -52,28 +52,26 @@ public class Main {
         for(String path: paths){
             File file = new File(path, commands[0]);
             if (file.exists() && file.canExecute()) {
-                ProcessBuilder pb = new ProcessBuilder(commands);
-                Process process = pb.start();
-                process.waitFor();
-                InputStream is = process.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-//                System.out.println("Program was passed "+ commands.length +" args (including program name).");
-//                System.out.println("Arg #0 (program name): "+ commands[0]);
-//                printCommands(commands);
-//                System.out.println("Program Signature: " + process.pid());
-                return true;
+                runProcess(commands);
             }
         }
         return false;
     }
 
-    public static void printCommands(String[] commands){
-        for(int i = 1; i < commands.length; i++){
-            System.out.println("Arg #"+i+": "+commands[i]);
+    public static boolean runProcess(String[] commands) throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder(commands);
+        Process process = pb.start();
+        process.waitFor();
+        printProgramOutput(process);
+        return true;
+    }
+
+    public static void printProgramOutput(Process process) throws IOException {
+        InputStream is = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
         }
     }
 }
