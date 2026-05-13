@@ -65,7 +65,7 @@ public class Main {
     }
 
     public static void printCommands(String[] commands){
-        for(int i = 1; i < commands.length - 1; i++){
+        for(int i = 1; i < commands.length; i++){
             System.out.println("Arg #"+i+": "+commands[i]);
         }
     }
