@@ -21,8 +21,10 @@ public class Main {
             } else if (input.startsWith("exit")) {
                 System.exit(0);
             } else {
-                getExecutableProgram(input);
-                System.out.println(input + ": command not found");
+                boolean executableProgram = getExecutableProgram(input);
+                if(!executableProgram) {
+                    System.out.println(input + ": command not found");
+                }
             }
         }
     }
@@ -46,16 +48,17 @@ public class Main {
         System.out.println(input + ": not found");
     }
 
-    public static void getExecutableProgram(String input) throws IOException, InterruptedException {
+    public static boolean getExecutableProgram(String input) throws IOException, InterruptedException {
         String[] command = input.split(" ");
         for(String path: paths){
             File file = new File(path, command[0]);
             if (file.exists() && file.canExecute()) {
                 ProcessBuilder pb = new ProcessBuilder(command);
                 Process process = pb.start();
-                int exitCode = process.waitFor();
-                System.out.println("Exited with code: " + exitCode);
+                System.out.println("Program was passed "+ input.length() +" args (including program name).");
+                return true;
             }
         }
+        return false;
     }
 }
