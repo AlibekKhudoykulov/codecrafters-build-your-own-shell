@@ -53,17 +53,17 @@ public class Main {
             File file = new File(path, commands[0]);
             if (file.exists() && file.canExecute()) {
                 runProcess(commands);
+                return true;
             }
         }
         return false;
     }
 
-    public static boolean runProcess(String[] commands) throws IOException, InterruptedException {
+    public static void runProcess(String[] commands) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(commands);
         Process process = pb.start();
         process.waitFor();
         printProgramOutput(process);
-        return true;
     }
 
     public static void printProgramOutput(Process process) throws IOException {
