@@ -55,7 +55,7 @@ public class Main {
             if (file.exists() && file.canExecute()) {
                 ProcessBuilder pb = new ProcessBuilder(command);
                 Process process = pb.start();
-                System.out.println("Program was passed "+ input.length() +" args (including program name).");
+                System.out.println("Program was passed "+ command.length +" args (including program name).");
                 return true;
             }
         }
