@@ -7,6 +7,7 @@ public class Main {
     private static final String[] builtIns = {"echo", "exit", "type", "pwd"};
     private static final String[] paths = System.getenv("PATH").split(File.pathSeparator);
     private static String currentDirectory = System.getProperty("user.dir");
+    private static final String userHome = System.getProperty("user.home");
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
@@ -67,6 +68,11 @@ public class Main {
     }
 
     private static void handlePath(String paths) {
+        if(paths.startsWith("~")){
+            currentDirectory = userHome;
+            return;
+        }
+
         Path newPath = Path.of(currentDirectory).resolve(paths).normalize();
         if (Files.exists(newPath) && Files.isDirectory(newPath)) {
             currentDirectory = newPath.toString();
