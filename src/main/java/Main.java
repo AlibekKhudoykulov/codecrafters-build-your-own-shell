@@ -1,11 +1,12 @@
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
     private static final String[] builtIns = {"echo", "exit", "type", "pwd"};
     private static final String[] paths = System.getenv("PATH").split(File.pathSeparator);
-    private static Path currentDirectory = Path.of("").toAbsolutePath();
+    private static String currentDirectory = System.getProperty("user.dir");
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
@@ -22,8 +23,9 @@ public class Main {
                 case "echo" -> System.out.println(argument);
                 case "exit" -> System.exit(0);
                 case "type" -> handleType(argument);
-                case "pwd"  -> System.out.println(currentDirectory);
-                default     -> handleExternal(input);
+                case "pwd" -> System.out.println(currentDirectory);
+                case "cd" -> handlePath(argument);
+                default -> handleExternal(input);
             }
         }
     }
@@ -61,6 +63,15 @@ public class Main {
             process.waitFor();
         } else {
             System.out.println(commands[0] + ": command not found");
+        }
+    }
+
+    private static void handlePath(String absolutePath) {
+        Path path = Path.of(absolutePath);
+        if (Files.exists(path) && Files.isDirectory(path)) {
+            currentDirectory = path.toString();
+        } else {
+            System.out.println("cd: " + path + ": No such file or directory.");
         }
     }
 }
