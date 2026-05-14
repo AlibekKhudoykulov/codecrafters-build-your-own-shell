@@ -7,7 +7,6 @@ public class Main {
     private static final String[] paths = System.getenv("PATH").split(File.pathSeparator);
     private static Path currentDirectory = Path.of("").toAbsolutePath();
 
-
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
 
@@ -15,71 +14,53 @@ public class Main {
             System.out.print("$ ");
             String input = sc.nextLine();
 
-            if (input.startsWith("echo")) {
-                System.out.println(input.substring(5));
-            } else if (input.startsWith("type")) {
-                getType(input.substring(5));
-            }else if(input.startsWith("pwd")) {
-                getPrintWorkingDirectory();
-            } else if (input.startsWith("exit")) {
-                System.exit(0);
-            } else {
-                boolean executableProgram = getExecutableProgram(input);
-                if(!executableProgram) {
-                    System.out.println(input + ": command not found");
-                }
+            String[] parts = input.split(" ", 2);
+            String command = parts[0];
+            String argument = parts.length > 1 ? parts[1] : "";
+
+            switch (command) {
+                case "echo" -> System.out.println(argument);
+                case "exit" -> System.exit(0);
+                case "type" -> handleType(argument);
+                case "pwd"  -> System.out.println(currentDirectory);
+                default     -> handleExternal(input);
             }
         }
     }
 
-    public static void getType(String input) {
+    private static File findExecutable(String name) {
+        for (String path : paths) {
+            File file = new File(path, name);
+            if (file.exists() && file.canExecute()) return file;
+        }
+        return null;
+    }
+
+    private static void handleType(String argument) {
         for (String builtIn : builtIns) {
-            if (builtIn.equalsIgnoreCase(input)) {
-                System.out.println(builtIn + " is a shell builtin");
+            if (builtIn.equals(argument)) {
+                System.out.println(argument + " is a shell builtin");
                 return;
             }
         }
-
-        for(String path: paths){
-            File file = new File(path, input);
-            if (file.exists() && file.canExecute()) {
-                System.out.println(input + " is " + file.getAbsolutePath());
-                return;
-            }
+        File executable = findExecutable(argument);
+        if (executable != null) {
+            System.out.println(argument + " is " + executable.getAbsolutePath());
+        } else {
+            System.out.println(argument + ": not found");
         }
-
-        System.out.println(input + ": not found");
     }
 
-    public static boolean getExecutableProgram(String input) throws IOException, InterruptedException {
+    private static void handleExternal(String input) throws IOException, InterruptedException {
         String[] commands = input.split(" ");
-        for(String path: paths){
-            File file = new File(path, commands[0]);
-            if (file.exists() && file.canExecute()) {
-                runProcess(commands);
-                return true;
-            }
+        File executable = findExecutable(commands[0]);
+        if (executable != null) {
+            ProcessBuilder pb = new ProcessBuilder(commands);
+            pb.inheritIO();
+            Process process = pb.start();
+            process.waitFor();
+        } else {
+            System.out.println(commands[0] + ": command not found");
         }
-        return false;
-    }
-
-    public static void runProcess(String[] commands) throws IOException, InterruptedException {
-        ProcessBuilder pb = new ProcessBuilder(commands);
-        Process process = pb.start();
-        process.waitFor();
-        printProgramOutput(process);
-    }
-
-    public static void printProgramOutput(Process process) throws IOException {
-        InputStream is = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
-
-    public static void getPrintWorkingDirectory(){
-        System.out.println(currentDirectory);
     }
 }
