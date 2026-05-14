@@ -67,16 +67,11 @@ public class Main {
     }
 
     private static void handlePath(String paths) {
-        Path newPath = null;
-        if(paths.startsWith("/")){
-            newPath = Path.of(paths);
-        }else{
-            newPath = Path.of(currentDirectory).resolve(paths).normalize();
-        }
+        Path newPath = Path.of(currentDirectory).resolve(paths).normalize();
         if (Files.exists(newPath) && Files.isDirectory(newPath)) {
             currentDirectory = newPath.toString();
         } else {
-            System.out.println("cd: " + newPath + ": No such file or directory");
+            System.out.println("cd: " + paths + ": No such file or directory");
         }
     }
 }
