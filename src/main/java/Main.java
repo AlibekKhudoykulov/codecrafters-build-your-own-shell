@@ -69,7 +69,7 @@ public class Main {
 
     private static void handlePath(String paths) {
         if(paths.startsWith("~")){
-            currentDirectory = System.getProperty("user.dir");;
+            currentDirectory = System.getProperty("user.dir");
             return;
         }
 
