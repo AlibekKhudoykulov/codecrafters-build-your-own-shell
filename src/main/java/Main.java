@@ -3,8 +3,9 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
-    private static String[] builtIns = {"echo", "exit", "type", "pwd"};
-    private static String[] paths = System.getenv("PATH").split(File.pathSeparator);
+    private static final String[] builtIns = {"echo", "exit", "type", "pwd"};
+    private static final String[] paths = System.getenv("PATH").split(File.pathSeparator);
+    private static Path currentDirectory = Path.of("").toAbsolutePath();
 
 
     public static void main(String[] args) throws Exception {
@@ -79,6 +80,6 @@ public class Main {
     }
 
     public static void getPrintWorkingDirectory(){
-        System.out.println(Path.of("").toAbsolutePath());
+        System.out.println(currentDirectory);
     }
 }
