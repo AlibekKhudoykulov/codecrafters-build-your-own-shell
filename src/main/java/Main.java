@@ -71,7 +71,7 @@ public class Main {
         if (Files.exists(path) && Files.isDirectory(path)) {
             currentDirectory = path.toString();
         } else {
-            System.out.println("cd: " + path + ": No such file or directory.");
+            System.out.println("cd: " + path + ": No such file or directory");
         }
     }
 }
